@@ -1,0 +1,335 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Submit a Run | Speedrun World</title>
+
+<style>
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  background: #090812;
+  color: white;
+  font-family: Arial, sans-serif;
+}
+
+header {
+  padding: 20px;
+  background: #100d20;
+  border-bottom: 1px solid #33245a;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 12px;
+}
+
+.logo {
+  font-size: 21px;
+  font-weight: 900;
+  color: #b68aff;
+}
+
+nav a {
+  color: #ddd;
+  text-decoration: none;
+  margin-left: 14px;
+  font-size: 13px;
+}
+
+.hero {
+  text-align: center;
+  padding: 45px 15px 25px;
+}
+
+.hero h1 {
+  font-size: 35px;
+  margin-bottom: 12px;
+}
+
+.hero h1 span {
+  color: #ad75ff;
+}
+
+.hero p {
+  color: #aaa;
+  line-height: 1.6;
+}
+
+.container {
+  max-width: 650px;
+  margin: 20px auto 50px;
+  padding: 25px;
+  background: #151222;
+  border: 1px solid #39265d;
+  border-radius: 18px;
+}
+
+.notice {
+  background: #24183a;
+  border: 1px solid #7545b6;
+  padding: 13px;
+  border-radius: 10px;
+  color: #d9c2ff;
+  font-size: 13px;
+  margin-bottom: 22px;
+  line-height: 1.5;
+}
+
+label {
+  display: block;
+  margin: 17px 0 8px;
+  font-weight: bold;
+  font-size: 14px;
+}
+
+input, select, textarea {
+  width: 100%;
+  padding: 13px;
+  border-radius: 9px;
+  border: 1px solid #40365b;
+  background: #0c0a15;
+  color: white;
+  outline: none;
+  font-size: 15px;
+}
+
+input:focus, select:focus, textarea:focus {
+  border-color: #a66cff;
+}
+
+textarea {
+  min-height: 85px;
+  resize: vertical;
+}
+
+button {
+  width: 100%;
+  padding: 15px;
+  margin-top: 25px;
+  border: none;
+  border-radius: 10px;
+  background: linear-gradient(100deg,#7138cf,#ae67ff);
+  color: white;
+  font-size: 16px;
+  font-weight: bold;
+  cursor: pointer;
+}
+
+button:disabled {
+  opacity: .6;
+  cursor: wait;
+}
+
+.status {
+  display: none;
+  margin-top: 18px;
+  padding: 14px;
+  border-radius: 9px;
+  line-height: 1.5;
+}
+
+footer {
+  text-align: center;
+  padding: 25px;
+  color: #777;
+  border-top: 1px solid #29213b;
+  font-size: 13px;
+}
+
+@media(max-width:500px) {
+  .hero h1 {font-size: 29px;}
+  .container {margin: 15px; padding: 19px;}
+  nav {width: 100%;}
+  nav a {margin: 0 9px 0 0;}
+}
+</style>
+</head>
+
+<body>
+
+<header>
+  <div class="logo">⚡ SPEEDRUN WORLD</div>
+  <nav>
+    <a href="index.html">Home</a>
+    <a href="index.html#games">Games</a>
+    <a href="index.html#leaderboard">Rankings</a>
+  </nav>
+</header>
+
+<section class="hero">
+  <h1>SUBMIT YOUR <span>RUN</span></h1>
+  <p>Every second counts. Submit your best speedrun<br>and compete with players worldwide.</p>
+</section>
+
+<main class="container">
+
+  <div class="notice">
+    ⚡ No account required! Anyone can submit a run.
+    Your submission will be reviewed before appearing on the leaderboard.
+  </div>
+
+  <form id="runForm">
+
+    <label for="username">Player Username *</label>
+    <input id="username" required maxlength="30"
+      placeholder="Enter your gaming username">
+
+    <label for="game">Select Game *</label>
+    <select id="game" required>
+      <option value="">Choose a game</option>
+      <option>Minecraft Bedrock Edition</option>
+      <option>Roblox – +1 Speed Keyboard Escape | Candy & Chocolate</option>
+      <option>Sonic</option>
+      <option>Super Mario</option>
+      <option>Other</option>
+    </select>
+
+    <label for="category">Run Category *</label>
+    <select id="category" required>
+      <option value="">Select a category</option>
+    </select>
+
+    <label for="platform">Platform *</label>
+    <select id="platform" required>
+      <option value="">Select platform</option>
+      <option>Windows</option>
+      <option>Android</option>
+      <option>iOS</option>
+      <option>Xbox</option>
+      <option>PlayStation</option>
+      <option>Nintendo Switch</option>
+      <option>Other</option>
+    </select>
+
+    <label>Completion Time *</label>
+    <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:9px;">
+      <input id="hours" type="number" min="0" max="999"
+        placeholder="Hours" value="0" required>
+      <input id="minutes" type="number" min="0" max="59"
+        placeholder="Minutes" value="0" required>
+      <input id="seconds" type="number" min="0" max="59"
+        placeholder="Seconds" value="0" required>
+    </div>
+
+    <label for="runDate">Date of Run *</label>
+    <input id="runDate" type="date" required>
+
+    <label for="proof">Video Proof URL *</label>
+    <input id="proof" type="url" required
+      placeholder="https://youtube.com/...">
+
+    <label for="comments">Additional Comments (Optional)</label>
+    <textarea id="comments"
+      placeholder="Any information about your run..."></textarea>
+
+    <button type="submit" id="submitButton">
+      ⚡ SUBMIT RUN
+    </button>
+
+    <div class="status" id="status"></div>
+
+  </form>
+</main>
+
+<footer>
+  © 2026 SPEEDRUN WORLD · EVERY SECOND COUNTS ⚡
+</footer>
+
+<script>
+const game = document.getElementById("game");
+const category = document.getElementById("category");
+
+const categories = {
+  "Minecraft Bedrock Edition": [
+    "Any%",
+    "All Advancements",
+    "Set Seed",
+    "Random Seed"
+  ],
+  "Roblox – +1 Speed Keyboard Escape | Candy & Chocolate": [
+    "World 1",
+    "World 2",
+    "World 3"
+  ],
+  "Sonic": ["Any%"],
+  "Super Mario": ["Any%"],
+  "Other": ["Other"]
+};
+
+game.addEventListener("change", () => {
+  category.innerHTML = '<option value="">Select a category</option>';
+
+  (categories[game.value] || []).forEach(name => {
+    const option = document.createElement("option");
+    option.value = name;
+    option.textContent = name;
+    category.appendChild(option);
+  });
+});
+
+document.getElementById("runDate").max =
+  new Date().toISOString().split("T")[0];
+
+const form = document.getElementById("runForm");
+
+form.addEventListener("submit", function(event) {
+  event.preventDefault();
+
+  const hours = Number(document.getElementById("hours").value);
+  const minutes = Number(document.getElementById("minutes").value);
+  const seconds = Number(document.getElementById("seconds").value);
+
+  if (hours < 0 || minutes < 0 || minutes > 59 ||
+      seconds < 0 || seconds > 59 ||
+      !Number.isInteger(hours) ||
+      !Number.isInteger(minutes) ||
+      !Number.isInteger(seconds) ||
+      hours + minutes + seconds === 0) {
+    alert("Please enter a valid completion time.");
+    return;
+  }
+
+  const proof = document.getElementById("proof").value.trim();
+
+  try {
+    const url = new URL(proof);
+    if (!["http:", "https:"].includes(url.protocol)) {
+      throw new Error("Invalid URL");
+    }
+  } catch {
+    alert("Please enter a valid video URL.");
+    return;
+  }
+
+  const submission = {
+    username: document.getElementById("username").value.trim(),
+    game: game.value,
+    category: category.value,
+    platform: document.getElementById("platform").value,
+    time: `${hours}h ${minutes}m ${seconds}s`,
+    runDate: document.getElementById("runDate").value,
+    proof: proof,
+    comments: document.getElementById("comments").value.trim(),
+    status: "Pending Review"
+  };
+
+  const status = document.getElementById("status");
+  status.style.display = "block";
+  status.style.background = "#392b19";
+  status.style.color = "#ffd58a";
+  status.textContent =
+    "Your form is working, but online submissions are not connected yet. No run has been saved. Backend connection is the next development step.";
+
+  console.log("Demo submission:", submission);
+});
+</script>
+
+</body>
+</html>
