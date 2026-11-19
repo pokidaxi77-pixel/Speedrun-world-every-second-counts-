@@ -242,7 +242,14 @@ function render(){
   platform.textContent=g.platform;
 
   const link=document.createElement("a");
-  link.href=g.url || "submit.html";
+  const gameIds = {
+ "Minecraft Bedrock Edition":"minecraft",
+ "Roblox – +1 Speed Keyboard Escape | Candy & Chocolate":"roblox",
+ "Sonic Mania":"sonic",
+ "Super Mario Bros.":"mario"
+};
+
+link.href = "game.html?id=" + (gameIds[g.name] || "minecraft");
   link.textContent=g.url ? "VIEW GAME ↗" : "SUBMIT A RUN →";
 
   details.append(title,description,platform,link);
