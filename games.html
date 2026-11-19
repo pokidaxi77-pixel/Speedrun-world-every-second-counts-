@@ -1,0 +1,276 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Games | Speedrun World</title>
+<style>
+*{box-sizing:border-box}
+body{margin:0;background:#090812;color:white;font-family:Arial,sans-serif}
+header{background:#110d20;border-bottom:1px solid #382451;padding:18px 5%;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:15px}
+.logo{font-size:22px;font-weight:900;color:#bd91ff}
+nav a{color:#ddd;text-decoration:none;margin:0 9px;font-size:14px}
+.hero{text-align:center;padding:45px 15px 25px}
+.hero h1{font-size:38px;margin:0 0 12px}
+.hero span{color:#b27aff}
+.hero p{color:#aaa;line-height:1.6}
+.search{max-width:650px;margin:25px auto;padding:0 15px}
+input{width:100%;padding:15px;background:#171225;border:1px solid #49336b;border-radius:10px;color:white;font-size:16px}
+.filters{display:flex;justify-content:center;gap:9px;flex-wrap:wrap;padding:10px}
+.filters button{background:#1c1530;color:#ddd;border:1px solid #473264;padding:10px 16px;border-radius:20px;cursor:pointer}
+.filters button.active,.filters button:hover{background:#8545d5;color:white}
+.count{max-width:1200px;margin:20px auto 12px;padding:0 18px;color:#aaa}
+.grid{max-width:1200px;margin:auto;padding:10px 18px 50px;display:grid;grid-template-columns:repeat(auto-fill,minmax(215px,1fr));gap:20px}
+.card{background:#171323;border:1px solid #332546;border-radius:14px;overflow:hidden;transition:.2s}
+.card:hover{transform:translateY(-5px);border-color:#a76bff}
+.cover{height:145px;background:linear-gradient(135deg,#291447,#6339a0);position:relative;overflow:hidden}
+.cover img{width:100%;height:100%;object-fit:cover}
+.cover .placeholder{height:100%;display:flex;align-items:center;justify-content:center;font-size:48px}
+.cover .tag{position:absolute;top:10px;left:10px;background:#171020d9;padding:6px 9px;border-radius:6px;font-size:11px}
+.details{padding:15px}
+.details h3{font-size:17px;margin:0 0 9px}
+.details p{color:#aaa;font-size:13px;line-height:1.5;min-height:38px}
+.platform{font-size:11px;color:#c69bff;margin:10px 0}
+.details a{display:block;text-align:center;background:#7137b9;color:white;padding:11px;border-radius:8px;text-decoration:none;font-weight:bold;font-size:13px}
+.empty{display:none;text-align:center;color:#aaa;padding:50px;grid-column:1/-1}
+footer{text-align:center;padding:28px;color:#777;border-top:1px solid #29213b}
+@media(max-width:500px){.hero h1{font-size:29px}nav{width:100%}.grid{grid-template-columns:repeat(2,minmax(0,1fr));gap:12px;padding:10px}.cover{height:120px}.details{padding:11px}.details h3{font-size:14px}}
+</style>
+</head>
+<body>
+
+<header>
+ <div class="logo">⚡ SPEEDRUN WORLD</div>
+ <nav>
+  <a href="index.html">Home</a>
+  <a href="games.html">Games</a>
+  <a href="index.html#leaderboard">Rankings</a>
+  <a href="submit.html">Submit Run</a>
+ </nav>
+</header>
+
+<section class="hero">
+ <h1>EXPLORE <span>GAMES</span></h1>
+ <p>Find your favourite game. Choose a category.<br>Set a record. Make history.</p>
+</section>
+
+<div class="search">
+ <input id="search" placeholder="🔍 Search games..." oninput="filterGames()">
+</div>
+
+<div class="filters" id="filters">
+ <button class="active" onclick="setFilter('All',this)">All Games</button>
+ <button onclick="setFilter('Adventure',this)">Adventure</button>
+ <button onclick="setFilter('Platformer',this)">Platformer</button>
+ <button onclick="setFilter('Sandbox',this)">Sandbox</button>
+ <button onclick="setFilter('Indie',this)">Indie</button>
+ <button onclick="setFilter('Racing',this)">Racing</button>
+</div>
+
+<div class="count" id="count"></div>
+
+<main class="grid" id="games">
+ <div class="empty" id="empty">No games found. Try another search.</div>
+</main>
+
+<footer>
+ ⚡ SPEEDRUN WORLD · EVERY SECOND COUNTS<br><br>
+ Game names and artwork belong to their respective owners.
+</footer>
+
+<script>
+const games = [
+{
+ name:"Minecraft Bedrock Edition",genre:"Sandbox",
+ emoji:"⛏️",platform:"Windows · Android · iOS · Consoles",
+ description:"Explore, build and speedrun your Minecraft world.",
+ image:"https://www.minecraft.net/content/dam/minecraftnet/games/minecraft/key-art/MC_TheWildUpdate_600x900.jpg",
+ categories:["Any%","All Advancements","Set Seed","Random Seed"]
+},
+{
+ name:"Roblox – +1 Speed Keyboard Escape | Candy & Chocolate",
+ genre:"Adventure",emoji:"🎮",platform:"Roblox · PC · Mobile",
+ description:"Race through the worlds of this Roblox speed game.",
+ image:"",categories:["World 1","World 2","World 3"],
+ url:"https://www.roblox.com/games/95082159892680/1-Speed-Keyboard-Escape-Candy-Chocolate"
+},
+{
+ name:"Sonic Mania",genre:"Platformer",emoji:"🦔",platform:"PC · PlayStation · Xbox · Switch",
+ description:"Run through colourful Sonic levels at high speed.",
+ app:584400
+},
+{
+ name:"Grand Theft Auto V",genre:"Adventure",emoji:"🚗",platform:"PC · PlayStation · Xbox",
+ description:"Explore a huge open world and complete missions.",
+ app:271590
+},
+{
+ name:"Terraria",genre:"Adventure",emoji:"🌳",platform:"PC · Mobile · Consoles",
+ description:"Explore, build and discover a pixel adventure.",
+ app:105600
+},
+{
+ name:"Stardew Valley",genre:"Indie",emoji:"🌻",platform:"PC · Mobile · Consoles",
+ description:"Build a farm and explore the countryside.",
+ app:413150
+},
+{
+ name:"Hollow Knight",genre:"Adventure",emoji:"⚔️",platform:"PC · Consoles",
+ description:"Explore a mysterious underground kingdom.",
+ app:367520
+},
+{
+ name:"Celeste",genre:"Platformer",emoji:"🏔️",platform:"PC · Consoles",
+ description:"Climb a mountain in this challenging platformer.",
+ app:504230
+},
+{
+ name:"Cuphead",genre:"Platformer",emoji:"☕",platform:"PC · Xbox · PlayStation · Switch",
+ description:"A hand-drawn run-and-gun platform adventure.",
+ app:268910
+},
+{
+ name:"Hades",genre:"Adventure",emoji:"🔥",platform:"PC · Consoles",
+ description:"Fight through a mythological underworld.",
+ app:1145360
+},
+{
+ name:"Among Us",genre:"Indie",emoji:"🚀",platform:"PC · Mobile · Consoles",
+ description:"A multiplayer game of teamwork and mystery.",
+ app:945360
+},
+{
+ name:"Fall Guys",genre:"Platformer",emoji:"🏆",platform:"PC · PlayStation · Xbox · Switch",
+ description:"Compete in colourful obstacle-course rounds.",
+ app:1097150
+},
+{
+ name:"Trackmania",genre:"Racing",emoji:"🏎️",platform:"PC · Consoles",
+ description:"Race through challenging tracks and time trials.",
+ app:2225070
+},
+{
+ name:"Geometry Dash",genre:"Platformer",emoji:"🔷",platform:"PC · Mobile",
+ description:"Jump and fly through rhythm-based levels.",
+ app:322170
+},
+{
+ name:"Poppy Playtime",genre:"Adventure",emoji:"🧸",platform:"PC · Consoles",
+ description:"Explore a mysterious toy factory.",
+ app:1721470
+},
+{
+ name:"Slime Rancher",genre:"Adventure",emoji:"🟢",platform:"PC · Consoles",
+ description:"Explore a colourful world filled with slimes.",
+ app:433340
+},
+{
+ name:"Getting Over It",genre:"Platformer",emoji:"🪨",platform:"PC · Mobile",
+ description:"Climb a challenging world using a hammer.",
+ app:240720
+},
+{
+ name:"Portal 2",genre:"Adventure",emoji:"🌀",platform:"PC · PlayStation · Xbox",
+ description:"Solve clever puzzles using portals.",
+ app:620
+},
+{
+ name:"Super Mario Bros.",genre:"Platformer",emoji:"🍄",platform:"Nintendo",
+ description:"Play classic platforming adventures.",
+ image:""
+},
+{
+ name:"Sonic Generations",genre:"Platformer",emoji:"💨",platform:"PC · PlayStation · Xbox",
+ description:"Experience classic and modern Sonic gameplay.",
+ app:71340
+}
+];
+
+let activeGenre="All";
+
+function coverImage(g){
+ if(g.app) return "https://cdn.cloudflare.steamstatic.com/steam/apps/"+g.app+"/library_600x900.jpg";
+ return g.image || "";
+}
+
+function render(){
+ const search=document.getElementById("search").value.toLowerCase();
+ const list=document.getElementById("games");
+ list.innerHTML="";
+ let shown=0;
+
+ games.forEach(g=>{
+  if(activeGenre!=="All" && g.genre!==activeGenre)return;
+  if(!g.name.toLowerCase().includes(search))return;
+  shown++;
+
+  const card=document.createElement("article");
+  card.className="card";
+
+  const cover=document.createElement("div");
+  cover.className="cover";
+
+  const image=coverImage(g);
+  if(image){
+   const img=document.createElement("img");
+   img.src=image;
+   img.alt=g.name+" cover artwork";
+   img.loading="lazy";
+   img.onerror=()=>{cover.innerHTML='<div class="placeholder">'+g.emoji+'</div>';};
+   cover.appendChild(img);
+  }else{
+   cover.innerHTML='<div class="placeholder">'+g.emoji+'</div>';
+  }
+
+  const tag=document.createElement("span");
+  tag.className="tag";
+  tag.textContent=g.genre;
+  cover.appendChild(tag);
+
+  const details=document.createElement("div");
+  details.className="details";
+
+  const title=document.createElement("h3");
+  title.textContent=g.name;
+
+  const description=document.createElement("p");
+  description.textContent=g.description;
+
+  const platform=document.createElement("div");
+  platform.className="platform";
+  platform.textContent=g.platform;
+
+  const link=document.createElement("a");
+  link.href=g.url || "submit.html";
+  link.textContent=g.url ? "VIEW GAME ↗" : "SUBMIT A RUN →";
+
+  details.append(title,description,platform,link);
+  card.append(cover,details);
+  list.appendChild(card);
+ });
+
+ document.getElementById("count").textContent=
+  "Showing "+shown+" of "+games.length+" games";
+
+ if(shown===0){
+  const empty=document.createElement("div");
+  empty.className="empty";
+  empty.style.display="block";
+  empty.textContent="No games found. Try another search.";
+  list.appendChild(empty);
+ }
+}
+
+function setFilter(genre,button){
+ activeGenre=genre;
+ document.querySelectorAll(".filters button").forEach(b=>b.classList.remove("active"));
+ button.classList.add("active");
+ render();
+}
+
+function filterGames(){render();}
+render();
+</script>
+</body>
+</html>
