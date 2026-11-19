@@ -1,0 +1,141 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Speedrun World | Every Second Counts</title>
+<style>
+*{box-sizing:border-box}
+body{margin:0;background:#0b0912;color:#fff;font-family:Arial,sans-serif}
+header{display:flex;align-items:center;justify-content:space-between;padding:18px 6%;background:#151020;border-bottom:1px solid #332447;position:sticky;top:0;z-index:5}
+.logo{font-size:21px;font-weight:900;color:#bd91ff}
+nav a{color:#ddd;text-decoration:none;margin:0 10px;font-size:14px}
+button,.btn{border:0;background:#8547ed;color:white;padding:12px 18px;border-radius:9px;font-weight:bold;cursor:pointer;text-decoration:none;display:inline-block}
+.hero{padding:75px 7%;background:radial-gradient(ellipse at 75% 30%,#492274,#171025 45%,#0b0912 75%);min-height:390px}
+.tag{color:#c29aff;font-weight:bold;letter-spacing:3px;font-size:12px}
+h1{font-size:clamp(38px,7vw,70px);line-height:1.05;margin:18px 0}
+h1 span{color:#b78aff}
+.hero p{color:#c9c0d7;max-width:520px;line-height:1.7}
+.actions{display:flex;gap:12px;flex-wrap:wrap;margin-top:25px}
+.secondary{background:#241832;border:1px solid #7652a0}
+.stats{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;padding:20px 6%}
+.stat,.card,.panel{background:#171321;border:1px solid #332744;border-radius:13px;padding:18px}
+.stat strong{display:block;font-size:26px;color:#c39aff}
+.stat small{color:#aaa}
+section{padding:30px 6%}
+.section-head{display:flex;justify-content:space-between;align-items:center;gap:12px}
+.section-head a{color:#c39aff;text-decoration:none}
+.games{display:grid;grid-template-columns:repeat(3,1fr);gap:16px}
+.game-art{height:140px;border-radius:9px;display:grid;place-items:center;font-size:42px;background:linear-gradient(135deg,#35214e,#171321)}
+.card h3{margin-bottom:5px}
+.muted{color:#aaa;font-size:13px}
+.search{width:100%;max-width:450px;padding:13px;border-radius:9px;border:1px solid #49365d;background:#171321;color:white;margin:12px 0}
+table{width:100%;border-collapse:collapse;margin-top:12px}
+td,th{text-align:left;padding:14px 9px;border-bottom:1px solid #34283f;font-size:14px}
+th{color:#bd91ff}
+.time{color:#c39aff;font-weight:bold}
+footer{text-align:center;padding:35px;color:#999;border-top:1px solid #332447;margin-top:30px}
+@media(max-width:700px){
+nav{display:none}
+.stats{grid-template-columns:repeat(2,1fr)}
+.games{grid-template-columns:repeat(2,1fr)}
+.hero{padding-top:55px}
+}
+@media(max-width:420px){.games{grid-template-columns:1fr}}
+</style>
+</head>
+<body>
+<header>
+<div class="logo">⚡ SPEEDRUN WORLD</div>
+<nav>
+<a href="#">Home</a><a href="#games">Games</a>
+<a href="#leaderboard">Rankings</a><a href="#community">Community</a>
+</nav>
+<a class="btn" href="#submit">Submit Run</a>
+</header>
+
+<div class="hero">
+<div class="tag">THE GLOBAL SPEEDRUNNING COMMUNITY</div>
+<h1>BEAT THE CLOCK.<br><span>MAKE HISTORY.</span></h1>
+<p>Discover games, compete against players worldwide, submit your fastest runs and earn your place on the leaderboard.</p>
+<div class="actions">
+<a class="btn" href="#games">Explore Games →</a>
+<a class="btn secondary" href="#submit">Submit a Run</a>
+</div>
+</div>
+
+<div class="stats">
+<div class="stat"><strong>0</strong><small>Games</small></div>
+<div class="stat"><strong>0</strong><small>Players</small></div>
+<div class="stat"><strong>0</strong><small>Verified Runs</small></div>
+<div class="stat"><strong>0</strong><small>Countries</small></div>
+</div>
+
+<section id="games">
+<div class="section-head">
+<h2>🎮 Featured Games</h2><a href="#games">Explore all →</a>
+</div>
+<input class="search" id="search" placeholder="Search games..." oninput="filterGames()">
+<div class="games" id="gameList">
+<div class="card game" data-name="minecraft">
+<div class="game-art">⛏️</div><h3>Minecraft</h3>
+<div class="muted">Survival • Bedrock • Java</div>
+<p class="muted">Explore categories and compete for records.</p>
+</div>
+<div class="card game" data-name="roblox">
+<div class="game-art">🎮</div><h3>Roblox</h3>
+<div class="muted">Obby • Escape • Adventure</div>
+<p class="muted">World 1 • World 2 • World 3</p>
+</div>
+<div class="card game" data-name="sonic">
+<div class="game-art">💨</div><h3>Sonic</h3>
+<div class="muted">Platformer • Any%</div>
+</div>
+<div class="card game" data-name="super mario">
+<div class="game-art">🍄</div><h3>Super Mario</h3>
+<div class="muted">Platformer • Speedrun</div>
+</div>
+</div>
+</section>
+
+<section id="leaderboard">
+<div class="section-head"><h2>🏆 Global Leaderboard</h2></div>
+<div class="panel">
+<p class="muted">Official verified records will appear here.</p>
+<table>
+<thead><tr><th>Rank</th><th>Player</th><th>Game</th><th>Time</th></tr></thead>
+<tbody><tr><td colspan="4" class="muted">No verified records yet. Be the first!</td></tr></tbody>
+</table>
+</div>
+</section>
+
+<section id="submit">
+<div class="panel">
+<h2>🚀 Ready to set a record?</h2>
+<p class="muted">Create an account and submit your speedrun with video proof.</p>
+<button onclick="alert('Account registration will be connected in the next development stage.')">Create Account</button>
+</div>
+</section>
+
+<section id="community">
+<h2>🌍 Join the Community</h2>
+<p class="muted">Compete globally. Represent your country. Make history.</p>
+</section>
+
+<footer>
+⚡ SPEEDRUN WORLD<br><br>
+Every Second Counts.<br><br>
+About • Rules • Contact • Privacy
+</footer>
+
+<script>
+function filterGames(){
+ const q=document.getElementById('search').value.toLowerCase();
+ document.querySelectorAll('.game').forEach(card=>{
+  card.style.display=card.dataset.name.includes(q)?'block':'none';
+ });
+}
+</script>
+</body>
+</html>
