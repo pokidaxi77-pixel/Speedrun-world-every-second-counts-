@@ -1,0 +1,183 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Leaderboard | Speedrun World</title>
+<style>
+*{box-sizing:border-box}
+body{margin:0;background:#09090f;color:#fff;font-family:Arial,sans-serif}
+header{padding:20px 6%;background:#11111c;border-bottom:1px solid #29243b;display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap}
+.logo{font-size:22px;font-weight:800;color:#a78bfa}
+a{color:#c4b5fd;text-decoration:none}
+main{max-width:1100px;margin:35px auto;padding:0 18px}
+h1{font-size:34px;margin-bottom:8px}
+.sub{color:#999;margin-bottom:25px}
+.controls{display:flex;gap:12px;flex-wrap:wrap;margin-bottom:20px}
+input,select{background:#171725;color:white;border:1px solid #39334d;border-radius:9px;padding:13px;min-width:180px;flex:1}
+.panel{background:#12121d;border:1px solid #29243b;border-radius:15px;overflow:hidden}
+table{width:100%;border-collapse:collapse}
+th,td{padding:17px 14px;text-align:left;border-bottom:1px solid #29243b}
+th{color:#a78bfa;font-size:12px;text-transform:uppercase}
+td{font-size:14px}
+tr:last-child td{border-bottom:0}
+.rank{font-weight:bold;color:#c4b5fd}
+.time{font-weight:bold;color:#a78bfa}
+.empty{text-align:center;padding:40px;color:#aaa}
+.note{color:#888;font-size:12px;margin-top:15px}
+@media(max-width:650px){
+h1{font-size:27px}
+th,td{padding:12px 8px;font-size:12px}
+.hide-mobile{display:none}
+}
+</style>
+</head>
+<body>
+<header>
+<div class="logo">⚡ SPEEDRUN WORLD</div>
+<a href="index.html">← Home</a>
+</header>
+
+<main>
+<h1>Global Leaderboard</h1>
+<p class="sub">The fastest verified runs. Every second counts.</p>
+
+<div class="controls">
+<input id="search" placeholder="Search player or game...">
+<select id="gameFilter">
+<option value="">All games</option>
+</select>
+<select id="categoryFilter">
+<option value="">All categories</option>
+</select>
+</div>
+
+<div class="panel">
+<table>
+<thead>
+<tr>
+<th>Rank</th>
+<th>Player</th>
+<th>Game</th>
+<th>Category</th>
+<th>Time</th>
+<th class="hide-mobile">Platform</th>
+</tr>
+</thead>
+<tbody id="rows">
+<tr><td colspan="6" class="empty">Loading leaderboard...</td></tr>
+</tbody>
+</table>
+</div>
+<p class="note">Only runs published by the Speedrun World moderation system appear here.</p>
+</main>
+
+<script>
+let allRuns=[];
+
+const rows=document.getElementById("rows");
+const gameFilter=document.getElementById("gameFilter");
+const categoryFilter=document.getElementById("categoryFilter");
+const search=document.getElementById("search");
+
+function timeToSeconds(value){
+  const parts=String(value).split(":").map(Number);
+  if(parts.some(n=>!Number.isFinite(n))) return Infinity;
+  let seconds=0;
+  for(const part of parts) seconds=seconds*60+part;
+  return seconds;
+}
+
+function loadFilters(){
+  const games=[...new Set(allRuns.map(r=>r.game).filter(Boolean))].sort();
+  const categories=[...new Set(allRuns.map(r=>r.category).filter(Boolean))].sort();
+
+  games.forEach(game=>{
+    const option=document.createElement("option");
+    option.value=game;
+    option.textContent=game;
+    gameFilter.appendChild(option);
+  });
+
+  categories.forEach(category=>{
+    const option=document.createElement("option");
+    option.value=category;
+    option.textContent=category;
+    categoryFilter.appendChild(option);
+  });
+}
+
+function render(){
+  const query=search.value.toLowerCase();
+  const selectedGame=gameFilter.value;
+  const selectedCategory=categoryFilter.value;
+
+  const filtered=allRuns.filter(run=>{
+    const matchesSearch=
+      (run.username||"").toLowerCase().includes(query) ||
+      (run.game||"").toLowerCase().includes(query);
+
+    return matchesSearch &&
+      (!selectedGame||run.game===selectedGame) &&
+      (!selectedCategory||run.category===selectedCategory);
+  });
+
+  filtered.sort((a,b)=>timeToSeconds(a.time)-timeToSeconds(b.time));
+
+  rows.innerHTML="";
+
+  if(!filtered.length){
+    rows.innerHTML='<tr><td colspan="6" class="empty">No verified runs found.</td></tr>';
+    return;
+  }
+
+  filtered.forEach((run,index)=>{
+    const tr=document.createElement("tr");
+    const values=[
+      "#"+(index+1),
+      run.username||"Unknown",
+      run.game||"Unknown",
+      run.category||"Any%",
+      run.time||"--",
+      run.platform||"--"
+    ];
+
+    values.forEach((value,i)=>{
+      const td=document.createElement("td");
+      td.textContent=value;
+      if(i===0)td.className="rank";
+      if(i===4)td.className="time";
+      if(i===5)td.className="hide-mobile";
+      tr.appendChild(td);
+    });
+
+    rows.appendChild(tr);
+  });
+}
+
+async function loadRuns(){
+  try{
+    const response=await fetch("data/runs.json?update="+Date.now());
+    if(!response.ok)throw new Error("Could not load runs.json");
+
+    const data=await response.json();
+    allRuns=Array.isArray(data)
+      ?data.filter(run=>run.status==="verified")
+      :[];
+
+    loadFilters();
+    render();
+  }catch(error){
+    rows.innerHTML='<tr><td colspan="6" class="empty">Could not load leaderboard data. Check data/runs.json.</td></tr>';
+  }
+}
+
+search.addEventListener("input",render);
+gameFilter.addEventListener("change",render);
+categoryFilter.addEventListener("change",render);
+
+loadRuns();
+</script>
+</body>
+</html>
