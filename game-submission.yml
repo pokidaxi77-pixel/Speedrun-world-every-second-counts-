@@ -1,0 +1,57 @@
+
+name: Submit a Game
+description: Submit a new game to Speedrun World
+title: "[GAME SUBMISSION] "
+labels: ["game-pending"]
+body:
+  - type: input
+    id: game
+    attributes:
+      label: Game Name
+      placeholder: Enter game name
+    validations:
+      required: true
+
+  - type: input
+    id: developer
+    attributes:
+      label: Developer
+    validations:
+      required: true
+
+  - type: input
+    id: username
+    attributes:
+      label: Your Speedrun World Username
+    validations:
+      required: true
+
+  - type: input
+    id: platform
+    attributes:
+      label: Platform
+      placeholder: PC, Mobile, Console, Roblox, Minecraft
+    validations:
+      required: true
+
+  - type: input
+    id: thumbnail
+    attributes:
+      label: Game Thumbnail URL
+    validations:
+      required: true
+
+  - type: input
+    id: game_link
+    attributes:
+      label: Official Game Link
+    validations:
+      required: true
+
+  - type: textarea
+    id: description
+    attributes:
+      label: Game Description
+    validations:
+      required: true
+      
