@@ -1,1 +1,568 @@
 
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Game Details | Speedrun World</title>
+<meta name="theme-color" content="#090817">
+
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap');
+
+:root{
+ --bg:#090817;
+ --panel:#131129;
+ --panel2:#191532;
+ --border:#30274c;
+ --purple:#8b35ff;
+ --light:#bd78ff;
+ --text:#f7f4ff;
+ --muted:#a8a1bd;
+}
+
+*{box-sizing:border-box;margin:0;padding:0}
+body{background:var(--bg);color:var(--text);font-family:Inter,Arial,sans-serif}
+a{text-decoration:none;color:inherit}
+button{font:inherit;cursor:pointer}
+
+.sidebar{
+ position:fixed;top:0;bottom:0;left:0;width:225px;
+ background:#0c0b1c;border-right:1px solid #29213e;
+ padding:22px 14px;z-index:10;
+}
+.logo{display:flex;align-items:center;gap:12px;margin-bottom:35px;padding:0 8px;font-size:19px;font-weight:900}
+.logo-icon{
+ width:42px;height:42px;border:3px solid var(--light);
+ border-radius:50%;display:grid;place-items:center;
+ color:var(--light);font-size:25px;
+ box-shadow:0 0 15px #8b35ff77;
+}
+.logo span{color:var(--light)}
+.nav{display:grid;gap:7px}
+.nav a{padding:13px;border-radius:9px;color:#c6c0dc;font-size:13px;font-weight:600}
+.nav a:hover,.nav a.active{background:#34165c;color:white}
+.nav a.active{border-left:3px solid var(--light)}
+
+.main{margin-left:225px;min-height:100vh}
+.topbar{
+ height:70px;background:#0c0b1c;border-bottom:1px solid #29213e;
+ display:flex;align-items:center;padding:0 27px;gap:15px;
+}
+.back{color:#c7b0ff;font-size:13px;font-weight:700}
+.top-title{font-size:14px;color:var(--muted)}
+.content{padding:25px;max-width:1500px;margin:auto}
+
+.banner{
+ min-height:300px;border:1px solid #49306d;border-radius:15px;
+ position:relative;overflow:hidden;
+ background:#17112b;
+}
+.banner img{
+ position:absolute;width:100%;height:100%;object-fit:cover;
+ inset:0;opacity:.65;
+}
+.banner:after{
+ content:"";position:absolute;inset:0;
+ background:linear-gradient(90deg,#0b091df5 0%,#100c27c9 48%,transparent 100%);
+}
+.banner-content{position:relative;z-index:2;padding:35px;max-width:650px}
+.crumb{font-size:12px;color:#c9b0ff;margin-bottom:17px}
+.game-label{
+ display:inline-block;background:#6325a8;padding:6px 11px;
+ border-radius:5px;font-size:10px;font-weight:800;
+ margin-bottom:13px;
+}
+h1{font-size:clamp(32px,5vw,49px);font-weight:900;letter-spacing:-1.5px}
+.developer{color:#c4bad8;font-size:13px;margin-top:8px}
+.description{font-size:14px;color:#ded8ec;line-height:1.7;margin-top:15px}
+.buttons{display:flex;gap:10px;flex-wrap:wrap;margin-top:22px}
+.btn{
+ padding:12px 18px;border-radius:8px;border:1px solid #8d43df;
+ background:#7d24ed;color:white;font-size:12px;font-weight:800;
+ display:inline-block;
+}
+.btn.secondary{background:#15102b;color:#e8ddff}
+.btn:hover{filter:brightness(1.2)}
+
+.info-grid{
+ display:grid;grid-template-columns:repeat(4,1fr);
+ gap:12px;margin:17px 0 24px;
+}
+.info-card{
+ background:var(--panel);border:1px solid var(--border);
+ padding:17px;border-radius:11px;
+}
+.info-label{color:var(--muted);font-size:11px}
+.info-value{font-size:16px;font-weight:800;margin-top:7px;word-break:break-word}
+
+.layout-grid{
+ display:grid;grid-template-columns:minmax(0,1fr) 300px;
+ gap:16px;
+}
+.panel{
+ background:var(--panel);border:1px solid var(--border);
+ border-radius:12px;overflow:hidden;margin-bottom:16px;
+}
+.panel-head{
+ padding:17px;border-bottom:1px solid var(--border);
+ display:flex;align-items:center;justify-content:space-between;
+}
+.panel-head h2{font-size:16px}
+.panel-body{padding:17px}
+.tabs{
+ display:flex;gap:7px;overflow-x:auto;
+ padding:12px 15px;border-bottom:1px solid var(--border);
+}
+.tab{
+ background:transparent;border:1px solid transparent;
+ color:var(--muted);padding:9px 13px;border-radius:7px;
+ font-size:12px;font-weight:700;white-space:nowrap;
+}
+.tab.active{background:#38205d;border-color:#8141c5;color:white}
+
+.category-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:12px}
+.category{
+ padding:16px;background:var(--panel2);
+ border:1px solid #352a53;border-radius:10px;
+}
+.category h3{font-size:14px}
+.category p{font-size:11px;color:var(--muted);margin-top:6px}
+.category a{
+ display:inline-block;margin-top:13px;
+ font-size:11px;color:#c38aff;font-weight:800;
+}
+
+.table-wrap{overflow-x:auto}
+table{width:100%;border-collapse:collapse;min-width:430px}
+th,td{
+ text-align:left;padding:13px 12px;
+ border-bottom:1px solid #2b2442;font-size:12px;
+}
+th{color:var(--muted);font-size:10px;text-transform:uppercase}
+td{color:#e8e2f3}
+.position{color:#c38aff;font-weight:900}
+.empty{text-align:center;padding:28px;color:var(--muted);font-size:13px}
+
+.rules{display:grid;gap:12px}
+.rule{
+ padding:13px;background:#19152e;border:1px solid #30274c;
+ border-radius:8px;font-size:12px;color:#d7d0e4;line-height:1.6;
+}
+.rule strong{display:block;color:white;margin-bottom:4px}
+
+.side-stat{
+ display:flex;justify-content:space-between;
+ padding:13px 0;border-bottom:1px solid #30274c;
+ font-size:12px;
+}
+.side-stat span{color:var(--muted)}
+.side-stat strong{color:#e8dcff}
+
+.side-image{width:100%;height:145px;object-fit:cover;border-radius:8px}
+.side-panel{padding:15px}
+.side-panel h3{font-size:14px;margin-bottom:12px}
+
+.notice{
+ background:#21163c;border:1px solid #55327f;
+ padding:13px;border-radius:9px;
+ color:#d9c9f1;font-size:11px;line-height:1.6;
+ margin-top:12px;
+}
+
+footer{padding:25px 0;color:#817a9c;font-size:11px}
+
+@media(max-width:950px){
+ .sidebar{width:190px}
+ .main{margin-left:190px}
+ .layout-grid{grid-template-columns:1fr}
+}
+@media(max-width:650px){
+ .sidebar{display:none}
+ .main{margin:0}
+ .content{padding:13px}
+ .topbar{height:58px;padding:0 15px}
+ .banner{min-height:310px}
+ .banner-content{padding:25px 19px}
+ .banner:after{background:linear-gradient(90deg,#0b091df5,#100c27aa)}
+ .info-grid{grid-template-columns:repeat(2,1fr);gap:8px}
+ .info-card{padding:12px}
+ .info-value{font-size:14px}
+ .category-grid{grid-template-columns:1fr}
+}
+</style>
+</head>
+
+<body>
+
+<aside class="sidebar">
+ <a href="index.html" class="logo">
+  <div class="logo-icon">ϟ</div>
+  <div>SPEEDRUN<br><span>WORLD</span></div>
+ </a>
+
+ <nav class="nav">
+  <a href="index.html">⌂ &nbsp; Home</a>
+  <a href="games.html" class="active">🎮 &nbsp; Games</a>
+  <a href="leaderboard.html">🏆 &nbsp; Leaderboard</a>
+  <a href="submit.html">⇧ &nbsp; Submit Run</a>
+  <a href="tournaments.html">🏆 &nbsp; Tournaments</a>
+  <a href="profile.html">👤 &nbsp; Profile</a>
+ </nav>
+</aside>
+
+<main class="main">
+
+ <header class="topbar">
+  <a href="games.html" class="back">← Back to Games</a>
+  <span class="top-title">/ Game Details</span>
+ </header>
+
+ <div class="content">
+
+  <section class="banner">
+   <img id="bannerImage" src="https://placehold.co/1200x500/17112b/ffffff?text=Speedrun+World" alt="">
+   <div class="banner-content">
+    <div class="crumb">Speedrun World / Games / Details</div>
+    <span class="game-label">GAME PROFILE</span>
+    <h1 id="gameName">Loading game...</h1>
+    <div class="developer" id="developer">Loading developer...</div>
+    <p class="description" id="description">
+     Loading game information...
+    </p>
+    <div class="buttons">
+     <a id="submitButton" class="btn" href="submit.html">⇧ Submit a Run</a>
+     <a href="#leaderboard" class="btn secondary">🏆 View Leaderboard</a>
+    </div>
+   </div>
+  </section>
+
+  <section class="info-grid">
+   <div class="info-card">
+    <div class="info-label">PLATFORM</div>
+    <div class="info-value" id="platform">—</div>
+   </div>
+   <div class="info-card">
+    <div class="info-label">CATEGORIES</div>
+    <div class="info-value" id="categoryCount">—</div>
+   </div>
+   <div class="info-card">
+    <div class="info-label">GAME STATUS</div>
+    <div class="info-value" style="color:#9dffbd">Approved</div>
+   </div>
+   <div class="info-card">
+    <div class="info-label">GAME DEVELOPER</div>
+    <div class="info-value" id="developerShort">—</div>
+   </div>
+  </section>
+
+  <div class="layout-grid">
+
+   <div>
+
+    <section class="panel">
+     <div class="tabs">
+      <button class="tab active" onclick="showTab('overview',this)">Overview</button>
+      <button class="tab" onclick="showTab('categories',this)">Categories</button>
+      <button class="tab" onclick="showTab('leaderboard',this)">Leaderboard</button>
+      <button class="tab" onclick="showTab('rules',this)">Rules</button>
+     </div>
+
+     <div class="panel-body" id="overview">
+      <h2 style="font-size:18px;margin-bottom:12px">About this game</h2>
+      <p id="fullDescription" style="font-size:13px;color:#c6bfd6;line-height:1.8">
+       Game information will appear here.
+      </p>
+     </div>
+
+     <div class="panel-body" id="categories" style="display:none">
+      <h2 style="font-size:18px;margin-bottom:14px">Speedrun Categories</h2>
+      <div class="category-grid" id="categoryGrid"></div>
+     </div>
+
+     <div id="leaderboard" style="display:none">
+      <div class="panel-head">
+       <h2>🏆 Game Leaderboard</h2>
+       <span style="font-size:11px;color:#a8a1bd">Run records</span>
+      </div>
+      <div class="table-wrap">
+       <table>
+        <thead>
+         <tr>
+          <th>Rank</th>
+          <th>Player</th>
+          <th>Category</th>
+          <th>Time</th>
+         </tr>
+        </thead>
+        <tbody id="leaderboardRows">
+         <tr><td colspan="4" class="empty">No verified runs available yet.</td></tr>
+        </tbody>
+       </table>
+      </div>
+      <div class="notice">
+       Only approved or verified runs should appear on the official leaderboard.
+      </div>
+     </div>
+
+     <div class="panel-body" id="rules" style="display:none">
+      <h2 style="font-size:18px;margin-bottom:14px">Game Rules</h2>
+      <div class="rules">
+       <div class="rule">
+        <strong>1. Submit genuine runs</strong>
+        Submit your own gameplay and provide valid proof.
+       </div>
+       <div class="rule">
+        <strong>2. Choose the correct category</strong>
+        Select the category that matches your run.
+       </div>
+       <div class="rule">
+        <strong>3. Provide video proof</strong>
+        Add a working video link so moderators can review your run.
+       </div>
+       <div class="rule">
+        <strong>4. Moderator verification</strong>
+        Runs must be approved before appearing on the official leaderboard.
+       </div>
+      </div>
+     </div>
+    </section>
+
+   </div>
+
+   <aside>
+
+    <section class="panel side-panel">
+     <h3>🎮 Game Information</h3>
+     <img class="side-image" id="sideImage"
+      src="https://placehold.co/600x350/17112b/ffffff?text=Game"
+      alt="Game artwork">
+     <div class="side-stat">
+      <span>Game name</span>
+      <strong id="sideName">—</strong>
+     </div>
+     <div class="side-stat">
+      <span>Developer</span>
+      <strong id="sideDeveloper">—</strong>
+     </div>
+     <div class="side-stat">
+      <span>Platform</span>
+      <strong id="sidePlatform">—</strong>
+     </div>
+     <a id="officialLink" href="#" target="_blank" rel="noopener"
+      class="btn secondary" style="display:none;width:100%;text-align:center;margin-top:15px">
+      Official Game Website ↗
+     </a>
+    </section>
+
+    <section class="panel side-panel">
+     <h3>⚡ Start Speedrunning</h3>
+     <p style="font-size:12px;color:#aaa1bf;line-height:1.7">
+      Have a great time? Submit your run and compete with speedrunners around the world.
+     </p>
+     <a id="sideSubmit" href="submit.html" class="btn" style="display:block;text-align:center;margin-top:14px">
+      Submit Your Run →
+     </a>
+    </section>
+
+   </aside>
+
+  </div>
+
+  <footer>© 2026 Speedrun World — Every Second Counts.</footer>
+ </div>
+</main>
+
+<script>
+let currentGame = null;
+
+function escapeHTML(value){
+ return String(value ?? "").replace(/[&<>"']/g,c=>({
+  "&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"
+ })[c]);
+}
+
+function safeURL(value){
+ try{
+  const url = new URL(value);
+  if(url.protocol === "https:" || url.protocol === "http:"){
+   return url.href;
+  }
+ }catch(e){}
+ return "https://placehold.co/1200x500/17112b/ffffff?text=Game";
+}
+
+function showTab(id,button){
+ ["overview","categories","leaderboard","rules"].forEach(tab=>{
+  document.getElementById(tab).style.display =
+   tab === id ? "block" : "none";
+ });
+
+ document.querySelectorAll(".tab").forEach(tab=>{
+  tab.classList.remove("active");
+ });
+
+ button.classList.add("active");
+}
+
+function getGameId(){
+ return new URLSearchParams(location.search).get("id");
+}
+
+async function loadGame(){
+ const id = getGameId();
+
+ if(!id){
+  showError("No game selected. Please open a game from the Games page.");
+  return;
+ }
+
+ try{
+  const response = await fetch("data/games.json");
+  if(!response.ok) throw new Error("Games file not found");
+
+  const games = await response.json();
+
+  currentGame = games.find(game =>
+   String(game.id) === id ||
+   String(game.name) === id
+  );
+
+  if(!currentGame || currentGame.status !== "approved"){
+   showError("This game was not found or has not been approved yet.");
+   return;
+  }
+
+  displayGame(currentGame);
+  loadLeaderboard(currentGame);
+
+ }catch(error){
+  showError("Unable to load game details. Please check data/games.json.");
+ }
+}
+
+function showError(message){
+ document.getElementById("gameName").textContent = "Game unavailable";
+ document.getElementById("description").textContent = message;
+ document.getElementById("fullDescription").textContent = message;
+}
+
+function displayGame(game){
+ const name = game.name || "Untitled Game";
+ const developer = game.developer || "Unknown Developer";
+ const platform = game.platform || "Not specified";
+ const description = game.description || "No description provided yet.";
+ const image = safeURL(game.image || "");
+
+ document.title = name + " | Speedrun World";
+
+ document.getElementById("gameName").textContent = name;
+ document.getElementById("developer").textContent = "Developed by " + developer;
+ document.getElementById("description").textContent = description;
+ document.getElementById("fullDescription").textContent = description;
+
+ document.getElementById("platform").textContent = platform;
+ document.getElementById("developerShort").textContent = developer;
+ document.getElementById("categoryCount").textContent =
+  Array.isArray(game.categories) ? game.categories.length : 1;
+
+ document.getElementById("sideName").textContent = name;
+ document.getElementById("sideDeveloper").textContent = developer;
+ document.getElementById("sidePlatform").textContent = platform;
+
+ document.getElementById("bannerImage").src = image;
+ document.getElementById("sideImage").src = image;
+
+ const submitURL = "submit.html?game=" + encodeURIComponent(game.id || name);
+ document.getElementById("submitButton").href = submitURL;
+ document.getElementById("sideSubmit").href = submitURL;
+
+ const official = document.getElementById("officialLink");
+ if(game.url){
+  official.href = safeURL(game.url);
+  official.style.display = "block";
+ }
+
+ loadCategories(game);
+}
+
+function loadCategories(game){
+ const grid = document.getElementById("categoryGrid");
+
+ const categories = Array.isArray(game.categories) && game.categories.length
+  ? game.categories
+  : ["Any%"];
+
+ grid.innerHTML = categories.map(category=>{
+  const name = typeof category === "string"
+   ? category
+   : category.name || "Other";
+
+  return `
+   <div class="category">
+    <h3>${escapeHTML(name)}</h3>
+    <p>Official speedrun category</p>
+    <a href="submit.html?game=${encodeURIComponent(game.id || game.name)}&category=${encodeURIComponent(name)}">
+     Submit in this category →
+    </a>
+   </div>
+  `;
+ }).join("");
+}
+
+function loadLeaderboard(game){
+ const body = document.getElementById("leaderboardRows");
+
+ // These records are stored in this browser only.
+ // A shared leaderboard needs a shared database.
+ let runs = [];
+
+ try{
+  runs = JSON.parse(localStorage.getItem("speedrunRuns") || "[]");
+ }catch(e){runs = [];}
+
+ const gameRuns = runs.filter(run=>{
+  const sameGame =
+   String(run.game) === String(game.id) ||
+   String(run.game) === String(game.name);
+
+  const approved =
+   run.status === "approved" ||
+   run.status === "verified";
+
+  return sameGame && approved;
+ });
+
+ gameRuns.sort((a,b)=>{
+  const timeA = parseTime(a.time);
+  const timeB = parseTime(b.time);
+  return timeA - timeB;
+ });
+
+ if(!gameRuns.length){
+  body.innerHTML = '<tr><td colspan="4" class="empty">No verified runs available yet. Be the first to submit a run!</td></tr>';
+  return;
+ }
+
+ body.innerHTML = gameRuns.map((run,index)=>`
+  <tr>
+   <td class="position">#${index+1}</td>
+   <td>${escapeHTML(run.username || "Player")}</td>
+   <td>${escapeHTML(run.category || "Any%")}</td>
+   <td><strong>${escapeHTML(run.time || "—")}</strong></td>
+  </tr>
+ `).join("");
+}
+
+function parseTime(value){
+ const parts = String(value || "").split(":").map(Number);
+ if(!parts.length || parts.some(Number.isNaN)) return Infinity;
+ return parts.reduce((total,part)=>total*60+part,0);
+}
+
+loadGame();
+</script>
+
+</body>
+</html>
+
