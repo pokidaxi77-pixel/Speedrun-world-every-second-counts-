@@ -1,0 +1,287 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Player Profile | Speedrun World</title>
+
+<style>
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  background: #090910;
+  color: white;
+  font-family: Arial, sans-serif;
+}
+
+header {
+  padding: 20px 7%;
+  background: #11111d;
+  border-bottom: 1px solid #29243f;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.logo {
+  color: #a78bfa;
+  font-size: 23px;
+  font-weight: bold;
+}
+
+header a {
+  color: white;
+  text-decoration: none;
+}
+
+.container {
+  max-width: 1050px;
+  margin: 35px auto;
+  padding: 15px;
+}
+
+.profile {
+  background: linear-gradient(135deg,#211638,#11111d);
+  border: 1px solid #49316d;
+  border-radius: 18px;
+  padding: 30px;
+  display: flex;
+  align-items: center;
+  gap: 25px;
+  flex-wrap: wrap;
+}
+
+.avatar {
+  width: 100px;
+  height: 100px;
+  border-radius: 50%;
+  background: #8053d9;
+  display: grid;
+  place-items: center;
+  font-size: 42px;
+  font-weight: bold;
+}
+
+.profile h1 {
+  font-size: 30px;
+  margin-bottom: 9px;
+}
+
+.muted {
+  color: #aaa4bb;
+  font-size: 14px;
+}
+
+.stats {
+  display: grid;
+  grid-template-columns: repeat(3,1fr);
+  gap: 15px;
+  margin-top: 22px;
+}
+
+.stat {
+  background: #151521;
+  border: 1px solid #29293c;
+  border-radius: 13px;
+  padding: 22px;
+}
+
+.stat h2 {
+  color: #b69aff;
+  font-size: 27px;
+  margin-bottom: 7px;
+}
+
+.section {
+  margin-top: 30px;
+  background: #151521;
+  border: 1px solid #29293c;
+  border-radius: 14px;
+  padding: 23px;
+}
+
+.section h2 {
+  margin-bottom: 20px;
+}
+
+.run {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 16px 0;
+  border-bottom: 1px solid #29293c;
+  gap: 10px;
+}
+
+.run:last-child {
+  border-bottom: none;
+}
+
+.time {
+  color: #b69aff;
+  font-weight: bold;
+}
+
+.status {
+  color: #4ade80;
+  font-size: 13px;
+}
+
+footer {
+  text-align: center;
+  padding: 30px;
+  color: #777;
+}
+
+@media(max-width:600px) {
+  .stats {
+    grid-template-columns: 1fr;
+  }
+
+  .profile {
+    padding: 22px;
+  }
+
+  .run {
+    flex-wrap: wrap;
+  }
+}
+</style>
+</head>
+
+<body>
+
+<header>
+  <div class="logo">⚡ SPEEDRUN WORLD</div>
+  <a href="index.html">← Home</a>
+</header>
+
+<div class="container">
+
+  <div class="profile">
+    <div class="avatar" id="avatar">P</div>
+
+    <div>
+      <h1 id="username">Player Name</h1>
+      <p class="muted" id="country">🌍 Country not set</p>
+      <p class="muted" style="margin-top:8px">
+        Speedrun World Player
+      </p>
+    </div>
+  </div>
+
+  <div class="stats">
+
+    <div class="stat">
+      <h2 id="totalRuns">0</h2>
+      <p class="muted">Total Runs</p>
+    </div>
+
+    <div class="stat">
+      <h2 id="approvedRuns">0</h2>
+      <p class="muted">Approved Runs</p>
+    </div>
+
+    <div class="stat">
+      <h2 id="gamesPlayed">0</h2>
+      <p class="muted">Games Played</p>
+    </div>
+
+  </div>
+
+  <div class="section">
+    <h2>🏆 Recent Speedruns</h2>
+    <div id="runList">
+      <p class="muted">No runs found for this player yet.</p>
+    </div>
+  </div>
+
+  <div class="section">
+    <h2>🎮 Games Played</h2>
+    <div id="gameList">
+      <p class="muted">No games found yet.</p>
+    </div>
+  </div>
+
+</div>
+
+<footer>
+  © 2026 Speedrun World. Every Second Counts.
+</footer>
+
+<script>
+const params = new URLSearchParams(location.search);
+const requestedUser = params.get("user");
+
+const runs = JSON.parse(
+  localStorage.getItem("speedrunRuns") || "[]"
+);
+
+const playerRuns = runs.filter(run =>
+  (run.username || "").toLowerCase() ===
+  (requestedUser || "").toLowerCase()
+);
+
+const approved = playerRuns.filter(run =>
+  (run.status || "").toLowerCase() === "approved"
+);
+
+document.getElementById("username").textContent =
+  requestedUser || "Guest Player";
+
+document.getElementById("avatar").textContent =
+  (requestedUser || "P").charAt(0).toUpperCase();
+
+document.getElementById("totalRuns").textContent =
+  playerRuns.length;
+
+document.getElementById("approvedRuns").textContent =
+  approved.length;
+
+const games = [...new Set(
+  approved.map(run => run.game).filter(Boolean)
+)];
+
+document.getElementById("gamesPlayed").textContent =
+  games.length;
+
+const runList = document.getElementById("runList");
+
+if (approved.length) {
+  runList.innerHTML = approved.map(run => `
+    <div class="run">
+      <div>
+        <strong>${escapeHTML(run.game || "Unknown Game")}</strong>
+        <p class="muted">${escapeHTML(run.category || "Any%")}</p>
+      </div>
+      <div class="time">${escapeHTML(run.time || "N/A")}</div>
+      <span class="status">✓ Approved</span>
+    </div>
+  `).join("");
+}
+
+document.getElementById("gameList").innerHTML =
+  games.length
+  ? games.map(game =>
+      `<div class="run"><strong>${escapeHTML(game)}</strong></div>`
+    ).join("")
+  : '<p class="muted">No approved games yet.</p>';
+
+function escapeHTML(value) {
+  return String(value).replace(/[&<>"']/g, char => ({
+    "&":"&amp;",
+    "<":"&lt;",
+    ">":"&gt;",
+    '"':"&quot;",
+    "'":"&#39;"
+  })[char]);
+}
+</script>
+
+</body>
+</html>
